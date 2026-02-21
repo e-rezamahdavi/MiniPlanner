@@ -1,0 +1,382 @@
+<!doctype html>
+<html lang="fa" dir="rtl">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="description" content="Mini Planner" />
+  <title>Mini Planner</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link
+    href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600;700&family=JetBrains+Mono:wght@400;600;700&family=Vazirmatn:wght@400;500;600;700&display=swap"
+    rel="stylesheet"
+  />
+  <link rel="stylesheet" href="assets/css/main.css" />
+</head>
+<body data-theme="light" data-theme-preference="system" data-print-mode="table-only">
+  <header class="gh-header no-print" role="banner">
+    <div class="gh-header-left">
+      <a id="logoLink" class="gh-logo" href="#" data-page-link="planner">
+        <span class="logo-mark" aria-hidden="true">MP</span>
+        <span class="logo-text">
+          <strong id="appTitle">Mini Planner</strong>
+          <small id="appSubtitle"></small>
+        </span>
+      </a>
+
+      <label class="gh-search" for="globalSearchInput">
+        <span id="searchLabel" class="sr-only">Search</span>
+        <input id="globalSearchInput" type="search" autocomplete="off" placeholder="Search" />
+        <kbd>/</kbd>
+      </label>
+
+      <nav class="gh-header-nav" aria-label="Top Navigation">
+        <button id="topNavDashboard" class="top-link" type="button" data-page-link="dashboard"></button>
+        <button id="topNavPlanner" class="top-link is-active" type="button" data-page-link="planner"></button>
+        <button id="topNavProject" class="top-link" type="button" data-page-link="project"></button>
+        <button id="topNavSettings" class="top-link" type="button" data-page-link="settings"></button>
+      </nav>
+    </div>
+
+    <div class="gh-header-right">
+      <button id="notificationsBtn" class="icon-btn" type="button" aria-label="Notifications">
+        <span aria-hidden="true">🔔</span>
+        <span id="notifyBadge" class="badge">0</span>
+      </button>
+
+      <div class="menu-anchor">
+        <button
+          id="createMenuBtn"
+          class="btn btn-header"
+          type="button"
+          aria-haspopup="menu"
+          aria-controls="createMenu"
+          aria-expanded="false"
+        ></button>
+        <div id="createMenu" class="gh-menu" role="menu" hidden>
+          <button type="button" role="menuitem" data-create-action="new-task" id="createNewTaskBtn"></button>
+          <button type="button" role="menuitem" data-create-action="new-project" id="createNewProjectBtn"></button>
+          <button type="button" role="menuitem" data-create-action="new-note" id="createNewNoteBtn"></button>
+          <button type="button" role="menuitem" data-create-action="import" id="createImportBtn"></button>
+        </div>
+      </div>
+
+      <div class="menu-anchor">
+        <button
+          id="userMenuBtn"
+          class="avatar-btn"
+          type="button"
+          aria-haspopup="menu"
+          aria-controls="userMenu"
+          aria-expanded="false"
+        >
+          <span class="avatar">M</span>
+        </button>
+        <div id="userMenu" class="gh-menu user-menu" role="menu" hidden>
+          <div class="menu-head">
+            <p id="userSignedInLabel"></p>
+            <strong id="userIdentityLabel">master</strong>
+          </div>
+          <hr />
+          <button type="button" role="menuitem" data-user-action="profile" id="userProfileBtn"></button>
+          <button type="button" role="menuitem" data-user-action="settings" id="userSettingsBtn"></button>
+          <hr />
+          <p id="menuThemeLabel" class="menu-group-label"></p>
+          <button type="button" role="menuitemradio" aria-checked="false" data-theme-choice="light" id="themeLightBtn"></button>
+          <button type="button" role="menuitemradio" aria-checked="false" data-theme-choice="dark" id="themeDarkBtn"></button>
+          <button type="button" role="menuitemradio" aria-checked="false" data-theme-choice="system" id="themeSystemBtn"></button>
+          <hr />
+          <button type="button" role="menuitem" data-user-action="help" id="userHelpBtn"></button>
+          <button type="button" role="menuitem" data-user-action="signout" id="userSignOutBtn" class="danger"></button>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <div class="gh-layout">
+    <main class="gh-main" id="appMain">
+      <p id="message" class="message is-muted no-print" role="status" aria-live="polite"></p>
+
+      <section id="pageDashboard" class="page" data-page="dashboard" hidden></section>
+
+      <section id="pagePlanner" class="page is-active" data-page="planner">
+        <header class="page-head">
+          <h2 id="weekHeading" class="panel-title"></h2>
+        </header>
+
+        <div class="week-layout">
+          <aside class="week-side no-print">
+            <article class="card panel-card">
+              <h3 id="weekFormHeading" class="subhead"></h3>
+
+              <form class="form-grid" onsubmit="return false">
+                <label class="field span-2" for="weekTitleInput">
+                  <span id="weekTitleLabel"></span>
+                  <input id="weekTitleInput" type="text" maxlength="120" autocomplete="off" list="weekTitleSuggestions" />
+                  <datalist id="weekTitleSuggestions"></datalist>
+                </label>
+
+                <label class="field" for="weekTypeSelect">
+                  <span id="weekTypeLabel"></span>
+                  <select id="weekTypeSelect"></select>
+                </label>
+
+                <label class="field" for="weekGoalSelect">
+                  <span id="weekGoalLabel"></span>
+                  <select id="weekGoalSelect"></select>
+                </label>
+
+                <label class="field" for="weekDaySelect">
+                  <span id="weekDayLabel"></span>
+                  <select id="weekDaySelect"></select>
+                </label>
+
+                <label class="field" for="weekStartSelect">
+                  <span id="weekStartLabel"></span>
+                  <select id="weekStartSelect"></select>
+                </label>
+
+                <label class="field" for="weekEndSelect">
+                  <span id="weekEndLabel"></span>
+                  <select id="weekEndSelect"></select>
+                </label>
+
+                <label class="field" for="weekLocationInput">
+                  <span id="weekLocationLabel"></span>
+                  <input id="weekLocationInput" type="text" maxlength="120" autocomplete="off" />
+                </label>
+
+                <label class="field span-2" for="weekNoteInput">
+                  <span id="weekNoteLabel"></span>
+                  <textarea id="weekNoteInput" rows="3"></textarea>
+                </label>
+
+                <div class="action-row span-2">
+                  <button id="weekAddBtn" type="button" class="btn btn-primary"></button>
+                  <button id="weekCancelBtn" type="button" class="btn btn-ghost" hidden></button>
+                </div>
+
+                <div class="tool-row span-2">
+                  <button id="weekPrintBtn" type="button" class="btn btn-ghost"></button>
+                  <button id="weekExportCsvBtn" type="button" class="btn btn-ghost"></button>
+                  <button id="weekExportTxtBtn" type="button" class="btn btn-ghost"></button>
+                  <button id="weekExportReportBtn" type="button" class="btn btn-ghost"></button>
+                  <button id="weekDeleteAllBtn" type="button" class="btn btn-danger-soft"></button>
+                </div>
+              </form>
+            </article>
+
+            <article class="card panel-card">
+              <h3 id="weekFiltersHeading" class="subhead"></h3>
+
+              <div class="form-grid">
+                <label class="field span-2" for="weekSearchInput">
+                  <span id="weekSearchLabel"></span>
+                  <input id="weekSearchInput" type="search" />
+                </label>
+
+                <label class="field" for="weekFilterTypeSelect">
+                  <span id="weekFilterTypeLabel"></span>
+                  <select id="weekFilterTypeSelect"></select>
+                </label>
+
+                <label class="field" for="weekFilterDaySelect">
+                  <span id="weekFilterDayLabel"></span>
+                  <select id="weekFilterDaySelect"></select>
+                </label>
+
+                <div class="tool-row span-2">
+                  <button id="weekClearFiltersBtn" type="button" class="btn btn-ghost"></button>
+                </div>
+              </div>
+            </article>
+
+            <article class="card panel-card">
+              <h3 id="weekCategoryHeading" class="subhead"></h3>
+
+              <div class="form-grid">
+                <label class="field span-2" for="weekCategoryInput">
+                  <span id="weekCategoryLabel"></span>
+                  <input id="weekCategoryInput" type="text" maxlength="60" autocomplete="off" />
+                </label>
+
+                <label class="field" for="weekCategoryIconInput">
+                  <span id="weekCategoryIconLabel"></span>
+                  <input id="weekCategoryIconInput" type="text" maxlength="4" autocomplete="off" />
+                </label>
+
+                <label class="field" for="weekCategoryColorInput">
+                  <span id="weekCategoryColorLabel"></span>
+                  <input id="weekCategoryColorInput" type="color" value="#1f6feb" />
+                </label>
+
+                <div class="tool-row span-2">
+                  <button id="weekAddCategoryBtn" type="button" class="btn btn-ghost"></button>
+                  <button id="weekRemoveCategoryBtn" type="button" class="btn btn-danger-soft"></button>
+                </div>
+
+                <p id="weekCategoryHint" class="hint span-2"></p>
+              </div>
+            </article>
+          </aside>
+
+          <section class="week-main">
+            <article class="card panel-card week-table-card">
+              <div class="section-head">
+                <h3 id="weekTableHeading" class="subhead"></h3>
+                <div id="weekStatsBar" class="stats-bar no-print"></div>
+              </div>
+
+              <div id="weekTimetableWrap" class="week-timetable-wrap"></div>
+            </article>
+
+            <section class="card panel-card no-print planner-overview-card">
+              <header class="section-head">
+                <h3 id="dashboardHeading" class="subhead"></h3>
+              </header>
+
+              <div class="kpi-grid">
+                <article class="kpi-card">
+                  <p id="dashboardTotalEventsLabel" class="kpi-label"></p>
+                  <strong id="dashboardTotalEventsValue" class="kpi-value">0</strong>
+                </article>
+                <article class="kpi-card">
+                  <p id="dashboardTotalHoursLabel" class="kpi-label"></p>
+                  <strong id="dashboardTotalHoursValue" class="kpi-value">0</strong>
+                </article>
+                <article class="kpi-card">
+                  <p id="dashboardTotalCategoriesLabel" class="kpi-label"></p>
+                  <strong id="dashboardTotalCategoriesValue" class="kpi-value">0</strong>
+                </article>
+              </div>
+
+              <div class="section-head">
+                <h3 id="weekReportHeading" class="subhead"></h3>
+              </div>
+
+              <div id="weekReportTotals" class="stats-bar"></div>
+
+              <div class="week-report-controls">
+                <label class="field" for="weekTopicQueryInput">
+                  <span id="weekTopicQueryLabel"></span>
+                  <input id="weekTopicQueryInput" type="search" />
+                </label>
+              </div>
+
+              <div class="week-report-grid">
+                <article class="week-report-panel">
+                  <h4 id="weekCategoryChartHeading" class="mini-subhead"></h4>
+                  <p id="weekCategorySummary" class="topic-summary"></p>
+                  <div id="weekCategoryChartWrap" class="chart-body week-topic-chart-wrap"></div>
+                  <div id="weekCategoryDetailsWrap" class="week-chart-details"></div>
+                </article>
+
+                <article class="week-report-panel">
+                  <h4 id="weekTopicHeading" class="mini-subhead"></h4>
+                  <p id="weekTopicSummary" class="topic-summary"></p>
+                  <div id="weekTopicChartWrap" class="chart-body week-topic-chart-wrap"></div>
+                  <div id="weekTopicDetailsWrap" class="week-chart-details"></div>
+                </article>
+              </div>
+
+              <div hidden>
+                <h3 id="dashboardUpcomingHeading"></h3>
+                <div id="dashboardUpcomingWrap"></div>
+              </div>
+            </section>
+
+            <article class="card panel-card no-print week-list-card">
+              <h3 id="weekListHeading" class="subhead"></h3>
+              <div id="weekEventsListWrap" class="list-wrap"></div>
+            </article>
+
+            <section id="weekPrintListSection" class="print-list-section" aria-label="Printable Event List"></section>
+          </section>
+        </div>
+      </section>
+
+      <section id="pageProject" class="page" data-page="project" hidden>
+        <header class="page-head">
+          <h2 id="projectHeading" class="panel-title"></h2>
+          <p id="projectSubtitle" class="page-subtitle"></p>
+        </header>
+
+        <nav class="content-tabs no-print" role="tablist" aria-label="Project Tabs">
+          <button id="projectTabOverview" class="content-tab is-active" type="button" role="tab" data-project-tab="overview" aria-selected="true" aria-controls="projectPanelOverview"></button>
+          <button id="projectTabActivity" class="content-tab" type="button" role="tab" data-project-tab="activity" aria-selected="false" aria-controls="projectPanelActivity"></button>
+          <button id="projectTabSettings" class="content-tab" type="button" role="tab" data-project-tab="settings" aria-selected="false" aria-controls="projectPanelSettings"></button>
+        </nav>
+
+        <section id="projectPanelOverview" class="project-panel" role="tabpanel" aria-labelledby="projectTabOverview">
+          <article class="card panel-card">
+            <h3 id="projectOverviewHeading" class="subhead"></h3>
+            <p id="projectOverviewSummary" class="topic-summary"></p>
+            <div id="projectCategoryBars" class="stack-list"></div>
+          </article>
+        </section>
+
+        <section id="projectPanelActivity" class="project-panel" role="tabpanel" aria-labelledby="projectTabActivity" hidden>
+          <article class="card panel-card">
+            <h3 id="projectActivityHeading" class="subhead"></h3>
+            <div id="projectActivityWrap" class="list-wrap"></div>
+          </article>
+        </section>
+
+        <section id="projectPanelSettings" class="project-panel" role="tabpanel" aria-labelledby="projectTabSettings" hidden>
+          <article class="card panel-card">
+            <h3 id="projectSettingsHeading" class="subhead"></h3>
+            <div class="settings-actions">
+              <button id="projectOpenPlannerBtn" type="button" class="btn btn-primary"></button>
+              <button id="projectOpenSettingsBtn" type="button" class="btn btn-ghost"></button>
+            </div>
+          </article>
+        </section>
+      </section>
+
+      <section id="pageSettings" class="page" data-page="settings" hidden>
+        <header class="page-head">
+          <h2 id="settingsHeading" class="panel-title"></h2>
+          <p id="settingsSubtitle" class="page-subtitle"></p>
+        </header>
+
+        <article class="card panel-card">
+          <div class="control-grid">
+            <label class="field" for="langSelect">
+              <span id="languageLabel"></span>
+              <select id="langSelect"></select>
+            </label>
+
+            <label class="field" for="themeSelect">
+              <span id="themeLabel"></span>
+              <select id="themeSelect"></select>
+            </label>
+
+            <label class="field" for="printModeSelect">
+              <span id="printModeLabel"></span>
+              <select id="printModeSelect"></select>
+            </label>
+          </div>
+        </article>
+
+        <section class="card panel-card">
+          <div class="section-head">
+            <h3 id="backupHeading" class="subhead"></h3>
+            <div class="tool-row">
+              <button id="globalExportJsonBtn" type="button" class="btn btn-ghost"></button>
+              <button id="globalImportJsonBtn" type="button" class="btn btn-ghost"></button>
+              <button id="globalImportFromBoxBtn" type="button" class="btn btn-ghost"></button>
+              <button id="globalCopyJsonBtn" type="button" class="btn btn-ghost"></button>
+              <button id="clearMessageBtn" type="button" class="btn btn-ghost"></button>
+              <input id="globalImportFileInput" type="file" accept="application/json,.json" hidden />
+            </div>
+          </div>
+
+          <textarea id="globalJsonBox" rows="9"></textarea>
+        </section>
+      </section>
+    </main>
+  </div>
+
+  <script type="module" src="assets/js/app.js"></script>
+</body>
+</html>
